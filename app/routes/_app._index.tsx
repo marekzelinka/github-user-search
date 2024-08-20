@@ -1,4 +1,9 @@
-import { json, type MetaFunction } from '@remix-run/node'
+import {
+  json,
+  redirect,
+  type LoaderFunctionArgs,
+  type MetaFunction,
+} from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { GeneralErrorBoundary } from '~/components/error-boundary'
 import { getUserByLogin } from '~/utils/github.server'
@@ -11,10 +16,19 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   ]
 }
 
-export async function loader() {
-  const user = await getUserByLogin('kapsodkpoqwkdeqwkodka')
+export async function loader({ request }: LoaderFunctionArgs) {
+  const url = new URL(request.url)
+  const q = url.searchParams.get('q')?.trim()
+
+  if (!q) {
+    url.searchParams.set('q', 'kentcdodds')
+
+    return redirect(url.toString())
+  }
+
+  const user = await getUserByLogin(q)
   if (!user) {
-    throw new Response('No user with the login "kentcdodds" exists.', {
+    throw new Response(`No user with the login "${q}" exists.`, {
       status: 404,
     })
   }
