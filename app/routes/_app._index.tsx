@@ -1,6 +1,14 @@
-import { json } from '@remix-run/node'
+import { json, type MetaFunction } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getUserByLogin } from '~/utils/github.server'
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  return [
+    {
+      title: data ? (data.user.name ?? `@${data.user.login}`) : 'Not Found',
+    },
+  ]
+}
 
 export async function loader() {
   const user = await getUserByLogin('kentcdodds')
