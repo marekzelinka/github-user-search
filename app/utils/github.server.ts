@@ -15,20 +15,25 @@ const GET_USER_QUERY = /* GraphQL */ `
     user(login: $login) {
       avatarUrl
       bio
+      company
       createdAt
+      email
       followers {
         totalCount
       }
       following {
         totalCount
       }
+      location
       login
       name
       pronouns
       repositories {
         totalCount
       }
+      twitterUsername
       url
+      websiteUrl
     }
   }
 `

@@ -7,6 +7,7 @@ import {
 import { useLoaderData } from '@remix-run/react'
 import { GeneralErrorBoundary } from '~/components/error-boundary'
 import { getUserByLogin } from '~/utils/github.server'
+import type { User } from '~/utils/types'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
@@ -117,6 +118,97 @@ export default function Component() {
           ))}
         </dl>
       </div>
+      <div className="mt-6 overflow-hidden bg-white shadow sm:rounded-lg">
+        <div className="px-4 py-6 sm:px-6">
+          <h3 className="text-base/7 font-semibold text-gray-900">Profile</h3>
+        </div>
+        <div className="border-t border-gray-100">
+          <UserProfile user={user} />
+        </div>
+      </div>
     </>
+  )
+}
+
+function UserProfile({
+  user,
+}: {
+  user: Pick<
+    User,
+    | 'login'
+    | 'email'
+    | 'location'
+    | 'company'
+    | 'websiteUrl'
+    | 'twitterUsername'
+    | 'bio'
+  >
+}) {
+  return (
+    <dl className="divide-y divide-gray-100">
+      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+        <dt className="text-sm/6 font-medium text-gray-900">Email</dt>
+        <dd className="text-sm/6 text-gray-700 max-sm:mt-1 sm:col-span-2">
+          {user.email?.length ? (
+            <a
+              href={`mailto:${user.email}`}
+              className="font-medium text-gray-600 underline hover:text-gray-500"
+            >
+              {user.email}
+            </a>
+          ) : (
+            <span className="text-gray-400">N/A</span>
+          )}
+        </dd>
+      </div>
+      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+        <dt className="text-sm/6 font-medium text-gray-900">Location</dt>
+        <dd className="text-sm/6 text-gray-700 max-sm:mt-1 sm:col-span-2">
+          {user.location ?? <span className="text-gray-400">N/A</span>}
+        </dd>
+      </div>
+      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+        <dt className="text-sm/6 font-medium text-gray-900">Company</dt>
+        <dd className="text-sm/6 text-gray-700 max-sm:mt-1 sm:col-span-2">
+          {user.company ?? <span className="text-gray-400">N/A</span>}
+        </dd>
+      </div>
+      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+        <dt className="text-sm/6 font-medium text-gray-900">Website</dt>
+        <dd className="text-sm/6 text-gray-700 max-sm:mt-1 sm:col-span-2">
+          {user.websiteUrl ? (
+            <a
+              href={user.websiteUrl}
+              className="font-medium text-gray-600 underline hover:text-gray-500"
+            >
+              {user.websiteUrl}
+            </a>
+          ) : (
+            <span className="text-gray-400">N/A</span>
+          )}
+        </dd>
+      </div>
+      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+        <dt className="text-sm/6 font-medium text-gray-900">Twitter</dt>
+        <dd className="text-sm/6 text-gray-700 max-sm:mt-1 sm:col-span-2">
+          {user.twitterUsername ? (
+            <a
+              href={`https://twitter.com/${user.twitterUsername}`}
+              className="font-medium text-gray-600 underline hover:text-gray-500"
+            >
+              @{user.twitterUsername}
+            </a>
+          ) : (
+            <span className="text-gray-400">N/A</span>
+          )}
+        </dd>
+      </div>
+      <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+        <dt className="text-sm/6 font-medium text-gray-900">Bio</dt>
+        <dd className="text-sm/6 text-gray-700 max-sm:mt-1 sm:col-span-2">
+          {user.bio ?? <span className="text-gray-400">N/A</span>}
+        </dd>
+      </div>
+    </dl>
   )
 }
