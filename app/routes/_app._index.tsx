@@ -1,5 +1,6 @@
 import { json, type MetaFunction } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
+import { GeneralErrorBoundary } from '~/components/error-boundary'
 import { getUserByLogin } from '~/utils/github.server'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -11,15 +12,24 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 }
 
 export async function loader() {
-  const user = await getUserByLogin('kentcdodds')
+  const user = await getUserByLogin('kapsodkpoqwkdeqwkodka')
   if (!user) {
-    throw new Response('', {
+    throw new Response('No user with the login "kentcdodds" exists.', {
       status: 404,
-      statusText: 'No user with the login "kentcdodds" exists.',
     })
   }
 
   return json({ user })
+}
+
+export function ErrorBoundary() {
+  return (
+    <div className="overflow-hidden rounded-lg bg-white shadow">
+      <div className="p-6">
+        <GeneralErrorBoundary />
+      </div>
+    </div>
+  )
 }
 
 export default function Component() {
