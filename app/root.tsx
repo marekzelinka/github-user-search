@@ -17,7 +17,7 @@ export function Layout({ children }: { children: ReactNode }) {
         <Meta />
         <Links />
       </head>
-      <body className="min-h-full antialiased [font-synthesis:none]">
+      <body className="h-full antialiased [font-synthesis:none]">
         {children}
         <ScrollRestoration />
         <Scripts />
