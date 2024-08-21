@@ -137,7 +137,7 @@ export default function Component() {
             </h3>
             <a
               href={`${user.url}?tab=repositories`}
-              className="text-sm/6 font-semibold text-gray-600 hover:text-gray-500"
+              className="text-sm/6 font-semibold text-sky-600 hover:text-sky-500"
             >
               View all<span className="sr-only">, repositories</span>
             </a>
@@ -183,7 +183,7 @@ function UserProfile({
           {user.email?.length ? (
             <a
               href={`mailto:${user.email}`}
-              className="font-medium text-gray-600 underline hover:text-gray-500"
+              className="font-medium text-sky-600 hover:text-sky-500"
             >
               {user.email}
             </a>
@@ -210,7 +210,7 @@ function UserProfile({
           {user.websiteUrl ? (
             <a
               href={user.websiteUrl}
-              className="font-medium text-gray-600 underline hover:text-gray-500"
+              className="font-medium text-sky-600 hover:text-indigo-500"
             >
               {user.websiteUrl}
             </a>
@@ -225,7 +225,7 @@ function UserProfile({
           {user.twitterUsername ? (
             <a
               href={`https://twitter.com/${user.twitterUsername}`}
-              className="font-medium text-gray-600 underline hover:text-gray-500"
+              className="font-medium text-sky-600 hover:text-indigo-500"
             >
               @{user.twitterUsername}
             </a>

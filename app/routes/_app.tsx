@@ -12,7 +12,7 @@ export default function Component() {
           <div className="relative flex items-center justify-between py-5">
             <div className="flex items-center max-lg:px-2">
               <div className="flex-none">
-                <Logo className="h-8 w-auto text-gray-500" />
+                <Logo className="h-8 w-auto text-sky-500" />
               </div>
             </div>
             <div className="flex flex-1 justify-end px-2 md:ml-6">
