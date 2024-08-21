@@ -1,3 +1,4 @@
+import { RectangleStackIcon } from '@heroicons/react/24/outline'
 import {
   json,
   redirect,
@@ -5,6 +6,8 @@ import {
   type MetaFunction,
 } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
+import type { CSSProperties } from 'react'
+import { Empty } from '~/components/empty'
 import { GeneralErrorBoundary } from '~/components/error-boundary'
 import { getUserByLogin } from '~/utils/github.server'
 import type { User } from '~/utils/types'
@@ -126,6 +129,34 @@ export default function Component() {
           <UserProfile user={user} />
         </div>
       </div>
+      <div className="mt-6 overflow-hidden bg-white shadow sm:rounded-lg">
+        <div className="px-4 py-6 sm:px-6">
+          <div className="flex items-center justify-between">
+            <h3 className="text-base/7 font-semibold text-gray-900">
+              Top Repositories
+            </h3>
+            <a
+              href={`${user.url}?tab=repositories`}
+              className="text-sm/6 font-semibold text-gray-600 hover:text-gray-500"
+            >
+              View all<span className="sr-only">, repositories</span>
+            </a>
+          </div>
+        </div>
+        <div className="border-t border-gray-100">
+          {user.topRepositories.nodes.length ? (
+            <UserRepositories user={user} />
+          ) : (
+            <div className="px-6 py-12">
+              <Empty
+                icon={<RectangleStackIcon />}
+                title="No repositories found"
+                description={`${user.login} doesn't have any public repositories yet.`}
+              />
+            </div>
+          )}
+        </div>
+      </div>
     </>
   )
 }
@@ -210,5 +241,116 @@ function UserProfile({
         </dd>
       </div>
     </dl>
+  )
+}
+
+function UserRepositories({
+  user,
+}: {
+  user: Pick<User, 'login' | 'url' | 'topRepositories'>
+}) {
+  return (
+    <ul className="divide-y divide-gray-100">
+      {user.topRepositories.nodes.map((repository) => (
+        <li
+          className="group relative px-4 py-5 hover:bg-gray-50 sm:px-6"
+          key={repository.url}
+        >
+          <div className="flex items-start gap-x-3">
+            <p className="text-sm/6 font-semibold text-gray-900">
+              <a href={repository.url}>
+                <span className="absolute inset-x-0 -top-px bottom-0" />
+                {repository.name}
+              </a>
+            </p>
+            {repository.primaryLanguage ? (
+              <p className="mt-0.5 inline-flex items-center gap-1.5 rounded-md bg-white px-1.5 py-0.5 text-xs font-medium text-gray-900 ring-1 ring-inset ring-gray-200">
+                {repository.primaryLanguage ? (
+                  <svg
+                    viewBox="0 0 6 6"
+                    className="size-1.5 fill-[--color]"
+                    style={
+                      {
+                        '--color': repository.primaryLanguage.color,
+                      } as CSSProperties
+                    }
+                    aria-hidden
+                  >
+                    <circle cx={3} cy={3} r={3} />
+                  </svg>
+                ) : null}
+                {repository.primaryLanguage.name}
+              </p>
+            ) : null}
+          </div>
+          {repository.description ? (
+            <p className="mt-0.5 line-clamp-2 max-w-lg text-sm/6 text-gray-900">
+              {repository.description}
+            </p>
+          ) : null}
+          {repository.repositoryTopics.nodes?.length ? (
+            <p className="mt-1 flex flex-wrap gap-1">
+              {repository.repositoryTopics.nodes.map(({ topic }) => (
+                <span
+                  key={topic.name}
+                  className="inline-flex items-center rounded-md bg-sky-50 px-1.5 py-0.5 text-xs font-medium text-sky-700 ring-1 ring-inset ring-sky-700/10"
+                >
+                  {topic.name}
+                </span>
+              ))}
+            </p>
+          ) : null}
+          <div className="mt-1 flex items-center gap-x-2 text-xs/5 text-gray-500">
+            <p className="whitespace-nowrap">
+              {repository.stargazerCount.toLocaleString('en-US', {
+                style: 'decimal',
+              })}{' '}
+              {repository.stargazerCount === 1 ? 'star' : 'stars'}
+            </p>
+            <svg
+              viewBox="0 0 2 2"
+              className="size-0.5 fill-current"
+              aria-hidden
+            >
+              <circle cx={1} cy={1} r={1} />
+            </svg>
+            <p className="whitespace-nowrap">
+              {repository.forkCount.toLocaleString('en-US', {
+                style: 'decimal',
+              })}{' '}
+              {repository.forkCount === 1 ? 'fork' : 'forks'}
+            </p>
+            {repository.licenseInfo &&
+            repository.licenseInfo?.name !== 'Other' ? (
+              <>
+                <svg
+                  viewBox="0 0 2 2"
+                  className="size-0.5 fill-current"
+                  aria-hidden
+                >
+                  <circle cx={1} cy={1} r={1} />
+                </svg>
+                <p className="truncate">{repository.licenseInfo.name}</p>
+              </>
+            ) : null}
+            <svg
+              viewBox="0 0 2 2"
+              className="size-0.5 fill-current"
+              aria-hidden
+            >
+              <circle cx={1} cy={1} r={1} />
+            </svg>
+            <p className="whitespace-nowrap">
+              Updated on{' '}
+              <time dateTime={repository.updatedAt}>
+                {new Date(repository.updatedAt).toLocaleDateString('en-US', {
+                  dateStyle: 'medium',
+                })}
+              </time>
+            </p>
+          </div>
+        </li>
+      ))}
+    </ul>
   )
 }

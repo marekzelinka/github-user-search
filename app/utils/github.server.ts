@@ -31,6 +31,39 @@ const GET_USER_QUERY = /* GraphQL */ `
       repositories {
         totalCount
       }
+      topRepositories: repositories(
+        affiliations: OWNER
+        first: 10
+        isArchived: false
+        isFork: false
+        isLocked: false
+        orderBy: { direction: DESC, field: STARGAZERS }
+        ownerAffiliations: OWNER
+        privacy: PUBLIC
+      ) {
+        nodes {
+          description
+          forkCount
+          licenseInfo {
+            name
+          }
+          name
+          primaryLanguage {
+            color
+            name
+          }
+          repositoryTopics(first: 6) {
+            nodes {
+              topic {
+                name
+              }
+            }
+          }
+          stargazerCount
+          updatedAt
+          url
+        }
+      }
       twitterUsername
       url
       websiteUrl
